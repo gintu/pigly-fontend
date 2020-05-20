@@ -14,6 +14,7 @@ class Chat extends React.Component {
       this.props.history.push("/");
     }
     socket.emit("join", this.props.loginData);
+    console.log(this.props.loginData);
     socket.on("from server", data => {
       let tempArray = this.state.messageArray;
       tempArray.push(data);
@@ -22,7 +23,7 @@ class Chat extends React.Component {
   }
 
   componentWillUnmount() {
-    // socket.emit("disconnect user", "gintu");
+    // socket.emit("disconnect user", "temp-name");
     socket.disconnect();
   }
 
