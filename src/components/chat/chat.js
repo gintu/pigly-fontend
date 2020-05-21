@@ -13,18 +13,14 @@ class Chat extends React.Component {
     if (!this.props.loginData.name) {
       this.props.history.push("/");
     }
-    socket.emit("join", this.props.loginData);
+
+    socket.emit("join room", this.props.loginData);
     console.log(this.props.loginData);
     socket.on("from server", data => {
       let tempArray = this.state.messageArray;
       tempArray.push(data);
       this.setState({ messageArray: tempArray });
     });
-  }
-
-  componentWillUnmount() {
-    // socket.emit("disconnect user", "temp-name");
-    socket.disconnect();
   }
 
   handleChange = e => this.setState({ text: e.target.value });
@@ -48,7 +44,7 @@ class Chat extends React.Component {
             return (
               <div key={item.id}>
                 <p>
-                  {item.sentBy} Says - {item.message}
+                  {item.sentBy} says - {item.message}
                 </p>
               </div>
             );
