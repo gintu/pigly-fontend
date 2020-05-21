@@ -5,7 +5,7 @@ import { setUser } from "../../redux/actions";
 class Join extends React.Component {
   state = {
     name: "",
-    room: ""
+    room: "toast me"
   };
 
   handleChange = e => {
@@ -29,12 +29,16 @@ class Join extends React.Component {
           onChange={this.handleChange}
           value={this.state.name}
         />
-        <input
+        <select
           type="text"
           name="room"
           onChange={this.handleChange}
           value={this.state.room}
-        />
+        >
+          <option value="toast me">Toast me</option>
+          <option value="roast me">Roast me</option>
+          <option value="random">Random</option>
+        </select>
         <button onClick={this.handleSubmit}>submit</button>
       </div>
     );

@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
-const socket = io("https://7xy2d.sse.codesandbox.io/");
 
 class Chat extends React.Component {
   state = {
@@ -13,14 +12,18 @@ class Chat extends React.Component {
     if (!this.props.loginData.name) {
       this.props.history.push("/");
     }
+    this.socket = io("https://7xy2d.sse.codesandbox.io/");
 
-    socket.emit("join room", this.props.loginData);
+    this.socket.emit("join room", this.props.loginData);
     console.log(this.props.loginData);
-    socket.on("from server", data => {
+    this.socket.on("from server", data => {
       let tempArray = this.state.messageArray;
       tempArray.push(data);
       this.setState({ messageArray: tempArray });
     });
+  }
+  componentWillUnmount() {
+    this.socket.close();
   }
 
   handleChange = e => this.setState({ text: e.target.value });
@@ -31,7 +34,7 @@ class Chat extends React.Component {
       id: uuidv4(),
       room: this.props.loginData.room
     };
-    socket.emit("chat message", msg);
+    this.socket.emit("chat message", msg);
     this.setState({ text: "" });
   };
 
