@@ -1,10 +1,12 @@
 import React from "react";
+import { connect } from "react-redux";
+import { authStart } from "../../redux/actions";
 
 class Auth extends React.Component {
   state = {
     formData: {
-      username: "",
-      password: ""
+      password: "",
+      email: ""
     },
     login: false
   };
@@ -20,6 +22,7 @@ class Auth extends React.Component {
 
   handleSubmit = e => {
     console.log(this.state);
+    this.props.authenticate({formData:this.state.formData,login:this.state.login});
   };
 
   render() {
@@ -29,7 +32,7 @@ class Auth extends React.Component {
 
         <input
           type="text"
-          name="username"
+          name="email"
           value={this.state.formData.username}
           onChange={this.handleChange}
         />
@@ -52,5 +55,13 @@ class Auth extends React.Component {
     );
   }
 }
+const mapDispatchToProps = dispatch => {
+  return {
+    authenticate: data => dispatch(authStart(data))
+  };
+};
 
-export default Auth;
+export default connect(
+  null,
+  mapDispatchToProps
+)(Auth);

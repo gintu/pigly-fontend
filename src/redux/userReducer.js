@@ -1,6 +1,6 @@
 const initialState = {};
 
-const reducer = (state = initialState, actions) => {
+const userReducer = (state = initialState, actions) => {
   if (actions.type === "SET_USER") {
     return {
       ...actions.payload
@@ -10,4 +10,4 @@ const reducer = (state = initialState, actions) => {
   }
 };
 
-export default reducer;
+export default userReducer;
