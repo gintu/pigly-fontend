@@ -25,3 +25,21 @@ export const authFail = payload => {
     payload
   };
 };
+
+export const initiateLogout = () => {
+  return {
+    type: "INITIATE_LOGOUT"
+  };
+};
+
+export const commitLogout = () => {
+  return {
+    type: "COMMIT_LOGOUT"
+  };
+};
+
+export const checkAuthStatus = () => {
+  return {
+    type: "CHECK_AUTH_STATUS"
+  };
+};

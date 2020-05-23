@@ -25,7 +25,17 @@ const authReducer = (state = initialState, actions) => {
       return {
         ...state,
         loading: false,
-        error: actions.payload.error
+        error: actions.payload.error,
+        token: null,
+        userId: null
+      };
+    }
+    case "COMMIT_LOGOUT": {
+      return {
+        ...state,
+        token: null,
+        userId: null,
+        error: null
       };
     }
     default: {

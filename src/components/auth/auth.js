@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { authStart } from "../../redux/actions";
+import { Redirect } from "react-router";
 
 class Auth extends React.Component {
   state = {
@@ -30,6 +31,7 @@ class Auth extends React.Component {
   render() {
     return (
       <div>
+        {this.props.auth.token && <Redirect to="/join" />}
         <h1>{this.state.login ? "Login" : "SignUp"}</h1>
 
         <input
@@ -53,6 +55,8 @@ class Auth extends React.Component {
         <button type="submit" onClick={this.toggle}>
           Switch to {this.state.login ? "Signup" : "Login"}
         </button>
+
+        {this.props.auth.error && <p>{this.props.auth.error}</p>}
       </div>
     );
   }
@@ -63,7 +67,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Auth);

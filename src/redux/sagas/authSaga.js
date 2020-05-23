@@ -1,6 +1,11 @@
-import { put, call, takeEvery } from "redux-saga/effects";
+import { put, call, takeEvery, delay, fork } from "redux-saga/effects";
 import axios from "axios";
-import { authSuccess, authFail } from "../actions";
+import {
+  authSuccess,
+  authFail,
+  commitLogout,
+  initiateLogout
+} from "../actions";
 
 async function fetcher(data) {
   let config = {
@@ -23,6 +28,19 @@ async function fetcher(data) {
   }
 }
 
+// async function autoLogout(expiresIn){
+
+//   await setTimeout(()=>{
+
+//     yield put(initiateLogout)
+//   },expiresIn*1000)
+// }
+
+function* autoLogout(timeout) {
+  yield delay(timeout * 1000);
+  yield put(initiateLogout());
+}
+
 function* authenticate(data) {
   let result = yield call(fetcher, data.payload);
 
@@ -30,17 +48,50 @@ function* authenticate(data) {
     yield console.log(result.data.error.message);
     yield put(authFail({ error: result.data.error.message }));
   } else {
-    localStorage.setItem("tokenId", result.data.idToken);
-    localStorage.setItem("userId", result.data.localId);
-    let expiresIn = Date.now() + result.data.expiresIn * 100;
-    localStorage.setItem("expiresIn", expiresIn);
+    yield localStorage.setItem("tokenId", result.data.idToken);
+    yield localStorage.setItem("userId", result.data.localId);
+    let expiresIn = Date.now() + result.data.expiresIn * 1000;
+    yield localStorage.setItem("expiresIn", expiresIn);
     let payload = {
       token: result.data.idToken,
       userId: result.data.localId
     };
+    yield fork(autoLogout, result.data.expiresIn);
     yield put(authSuccess(payload));
   }
 }
+
+function* logout() {
+  yield localStorage.removeItem("token");
+  yield localStorage.removeItem("userId");
+  yield localStorage.removeItem("expiresIn");
+  yield put(commitLogout());
+}
+
+function* checkAuth() {
+  let token = yield localStorage.getItem("token");
+  let userId = yield localStorage.getItem("userId");
+  let expiresIn = yield localStorage.getItem("expiresIn");
+
+  if (token) {
+    let currentTime = new Date.now();
+    if (currentTime < expiresIn) {
+      let remainingTime = expiresIn - currentTime;
+
+      yield fork(autoLogout, remainingTime / 1000);
+      let payload = {
+        token,
+        userId
+      };
+      yield put(authSuccess(payload));
+    } else {
+      yield put(initiateLogout);
+    }
+  }
+}
+
 export default function* authReducer() {
   yield takeEvery("AUTH_START", authenticate);
+  yield takeEvery("INITIATE_LOGOUT", logout);
+  yield takeEvery("CHECK_AUTH_STATUS", checkAuth);
 }

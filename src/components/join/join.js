@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setUser } from "../../redux/actions";
+import { setUser, initiateLogout } from "../../redux/actions";
 
 class Join extends React.Component {
   state = {
@@ -23,6 +23,7 @@ class Join extends React.Component {
     return (
       <div>
         <h1>join</h1>
+        <button onClick={this.props.logout}>Logout</button>
         <input
           type="text"
           name="name"
@@ -47,7 +48,8 @@ class Join extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUser: payload => dispatch(setUser(payload))
+    setUser: payload => dispatch(setUser(payload)),
+    logout: () => dispatch(initiateLogout())
   };
 };
 export default connect(
