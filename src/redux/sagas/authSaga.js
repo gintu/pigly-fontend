@@ -19,15 +19,17 @@ async function fetcher(data) {
     let res = await axios.post(url, config);
     return res;
   } catch (err) {
-    console.log(err);
+    return err.response;
   }
 }
 
 function* authenticate(data) {
   let result = yield call(fetcher, data.payload);
-  yield console.log(result);
 
-  if (result.data) {
+  if (!!result.data.error) {
+    yield console.log(result.data.error.message);
+    yield put(authFail({ error: result.data.error.message }));
+  } else {
     localStorage.setItem("tokenId", result.data.idToken);
     localStorage.setItem("userId", result.data.localId);
     let expiresIn = Date.now() + result.data.expiresIn * 100;
@@ -37,8 +39,6 @@ function* authenticate(data) {
       userId: result.data.localId
     };
     yield put(authSuccess(payload));
-  } else {
-    yield put(authFail(result.error.message));
   }
 }
 export default function* authReducer() {
