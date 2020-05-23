@@ -21,8 +21,10 @@ class Auth extends React.Component {
   };
 
   handleSubmit = e => {
-    console.log(this.state);
-    this.props.authenticate({formData:this.state.formData,login:this.state.login});
+    this.props.authenticate({
+      formData: this.state.formData,
+      login: this.state.login
+    });
   };
 
   render() {
