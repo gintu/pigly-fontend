@@ -13,6 +13,8 @@ export const authStart = payload => {
 };
 
 export const authSuccess = payload => {
+  console.log(payload);
+  payload.to.push("/join");
   return {
     type: "AUTH_SUCCESS",
     payload

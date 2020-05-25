@@ -54,7 +54,8 @@ function* authenticate(data) {
     yield localStorage.setItem("expiresIn", expiresIn);
     let payload = {
       token: result.data.idToken,
-      userId: result.data.localId
+      userId: result.data.localId,
+      to: data.to
     };
     yield fork(autoLogout, result.data.expiresIn);
     yield put(authSuccess(payload));

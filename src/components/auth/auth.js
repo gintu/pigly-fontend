@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { authStart } from "../../redux/actions";
-import { Redirect } from "react-router";
+// import { Redirect } from "react-router";
 
 class Auth extends React.Component {
   state = {
@@ -22,16 +22,18 @@ class Auth extends React.Component {
   };
 
   handleSubmit = e => {
+    console.log(this.props.history);
     this.props.authenticate({
       formData: this.state.formData,
-      login: this.state.login
+      login: this.state.login,
+      to: this.props.history
     });
   };
 
   render() {
     return (
       <div>
-        {this.props.auth.token && <Redirect to="/join" />}
+        {/* {this.props.auth.token && <Redirect to="/join" />} */}
         <h1>{this.state.login ? "Login" : "SignUp"}</h1>
 
         <input
