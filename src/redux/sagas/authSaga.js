@@ -43,6 +43,7 @@ function* autoLogout(timeout) {
 
 function* authenticate(data) {
   let result = yield call(fetcher, data.payload);
+  console.log(data);
 
   if (!!result.data.error) {
     yield console.log(result.data.error.message);
@@ -55,7 +56,7 @@ function* authenticate(data) {
     let payload = {
       token: result.data.idToken,
       userId: result.data.localId,
-      to: data.to
+      to: data.payload.to
     };
     yield fork(autoLogout, result.data.expiresIn);
     yield put(authSuccess(payload));
@@ -63,7 +64,7 @@ function* authenticate(data) {
 }
 
 function* logout() {
-  yield localStorage.removeItem("token");
+  yield localStorage.removeItem("tokenId");
   yield localStorage.removeItem("userId");
   yield localStorage.removeItem("expiresIn");
   yield put(commitLogout());

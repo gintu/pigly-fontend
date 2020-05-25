@@ -1,14 +1,13 @@
 import { Route, Redirect } from "react-router";
 import React from "react";
+import { connect } from "react-redux";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  let token = localStorage.getItem("tokenId");
-  console.log(token);
   return (
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem("token") ? (
+        localStorage.getItem("tokenId") ? (
           <Component {...props} />
         ) : (
           <Redirect to="/" />
@@ -18,4 +17,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  };
+};
+export default connect(mapStateToProps)(PrivateRoute);
