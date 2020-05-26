@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setUser, initiateLogout } from "../../redux/actions";
+import { setUser, initiateSaveUserData } from "../../redux/actions";
 
 class Join extends React.Component {
   state = {
@@ -15,8 +15,15 @@ class Join extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     // console.log(this.state);
-    this.props.setUser(this.state);
-    this.props.history.push("/chat");
+    // this.props.setUser(this.state);
+    // this.props.history.push("/chat");
+
+    let data = {
+      formData: { ...this.state },
+      to: this.props.history
+    };
+
+    this.props.saveUserData(data);
   };
 
   render() {
@@ -52,7 +59,7 @@ class Join extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUser: payload => dispatch(setUser(payload))
+    saveUserData: payload => dispatch(initiateSaveUserData(payload))
   };
 };
 export default connect(

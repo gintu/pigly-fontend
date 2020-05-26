@@ -53,8 +53,16 @@ export const initiateSaveUserData = payload => {
 };
 
 export const commitUserData = payload => {
+  payload.to.push("/chatlist");
   return {
     type: "COMMIT_USER_DATA",
     payload
   };
 };
+
+// export const fetchedUserData = payload =>{
+//   return {
+//     type:'FETCHED_USER_DATA',
+//     payload
+//   }
+// }

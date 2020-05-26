@@ -1,11 +1,14 @@
-import { put, call, takeEvery, delay, fork } from "redux-saga/effects";
+import { put, call, takeEvery, delay, fork, select } from "redux-saga/effects";
 import axios from "axios";
 import {
   authSuccess,
   authFail,
   commitLogout,
-  initiateLogout
+  initiateLogout,
+  commitUserData
 } from "../actions";
+
+export const getUserId = state => state.userId;
 
 async function fetcher(data) {
   let config = {
@@ -26,6 +29,42 @@ async function fetcher(data) {
   } catch (err) {
     return err.response;
   }
+}
+
+async function fetchUserData(data) {
+  try {
+    let res = await axios.get(
+      `https://friends-54db6.firebaseio.com/users.json?orderBy="clientId"&startAt=${data}&endAt=${data}`
+    );
+    return res;
+  } catch (err) {
+    return err.response;
+  }
+}
+
+async function saveToFirebase(data) {
+  let id = select(getUserId);
+
+  let user = {
+    clientId: id,
+    name: data.name,
+    knowMe: data.knowMe
+  };
+
+  try {
+    let res = await axios.get(
+      `https://friends-54db6.firebaseio.com/users.json`,
+      user
+    );
+    return res;
+  } catch (err) {
+    return err.response;
+  }
+}
+
+function* saveUserData(data) {
+  let result = yield call(saveToFirebase, data.payload.formData);
+  yield put(commitUserData(data.payload));
 }
 
 // async function autoLogout(expiresIn){
@@ -60,6 +99,10 @@ function* authenticate(data) {
     };
     yield fork(autoLogout, result.data.expiresIn);
     yield put(authSuccess(payload));
+    if (data.payload.login) {
+      let userData = yield call(fetchUserData, result.data.localId);
+      yield put(commitUserData(userData));
+    }
   }
 }
 
@@ -96,4 +139,5 @@ export default function* authReducer() {
   yield takeEvery("AUTH_START", authenticate);
   yield takeEvery("INITIATE_LOGOUT", logout);
   yield takeEvery("CHECK_AUTH_STATUS", checkAuth);
+  yield takeEvery("INITIATE_SAVE_USER_DATA", saveUserData);
 }
