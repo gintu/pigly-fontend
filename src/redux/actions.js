@@ -13,7 +13,6 @@ export const authStart = payload => {
 };
 
 export const authSuccess = payload => {
-  console.log(payload);
   payload.to.push("/join");
   return {
     type: "AUTH_SUCCESS",
@@ -43,5 +42,19 @@ export const commitLogout = () => {
 export const checkAuthStatus = () => {
   return {
     type: "CHECK_AUTH_STATUS"
+  };
+};
+
+export const initiateSaveUserData = payload => {
+  return {
+    type: "INITIATE_SAVE_USER_DATA",
+    payload
+  };
+};
+
+export const commitUserData = payload => {
+  return {
+    type: "COMMIT_USER_DATA",
+    payload
   };
 };

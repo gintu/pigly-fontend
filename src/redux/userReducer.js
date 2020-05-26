@@ -1,7 +1,11 @@
-const initialState = {};
+const initialState = {
+  userId: null,
+  name: "",
+  knowMe: ""
+};
 
 const userReducer = (state = initialState, actions) => {
-  if (actions.type === "SET_USER") {
+  if (actions.type === "COMMIT_USER_DATA") {
     return {
       ...actions.payload
     };

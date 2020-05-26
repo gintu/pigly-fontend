@@ -5,7 +5,7 @@ import { setUser, initiateLogout } from "../../redux/actions";
 class Join extends React.Component {
   state = {
     name: "",
-    room: "toast me"
+    knowMe: "school"
   };
 
   handleChange = e => {
@@ -23,24 +23,28 @@ class Join extends React.Component {
     return (
       <div>
         <h1>join</h1>
-        <button onClick={this.props.logout}>Logout</button>
+        name
         <input
           type="text"
           name="name"
           onChange={this.handleChange}
           value={this.state.name}
-        />
+        />{" "}
+        you know me from
         <select
           type="text"
           name="room"
           onChange={this.handleChange}
           value={this.state.room}
         >
-          <option value="toast me">Toast me</option>
-          <option value="roast me">Roast me</option>
-          <option value="random">Random</option>
+          <option value="De Paul">De Paul</option>
+          <option value="RIT">RIT</option>
+          <option value="Family">Family</option>
+          <option value="Trips">Trips</option>
+          <option value="Neigbourhood">Neigbourhood</option>
+          <option value="Other">Other</option>
         </select>
-        <button onClick={this.handleSubmit}>submit</button>
+        <button onClick={this.handleSubmit}>finish</button>
       </div>
     );
   }
@@ -48,8 +52,7 @@ class Join extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUser: payload => dispatch(setUser(payload)),
-    logout: () => dispatch(initiateLogout())
+    setUser: payload => dispatch(setUser(payload))
   };
 };
 export default connect(
