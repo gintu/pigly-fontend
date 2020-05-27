@@ -5,7 +5,7 @@ import { setUser, initiateSaveUserData } from "../../redux/actions";
 class Join extends React.Component {
   state = {
     name: "",
-    knowMe: "school"
+    knowMe: "RIT"
   };
 
   handleChange = e => {
@@ -40,9 +40,9 @@ class Join extends React.Component {
         you know me from
         <select
           type="text"
-          name="room"
+          name="knowMe"
           onChange={this.handleChange}
-          value={this.state.room}
+          value={this.state.knowMe}
         >
           <option value="De Paul">De Paul</option>
           <option value="RIT">RIT</option>
@@ -52,10 +52,17 @@ class Join extends React.Component {
           <option value="Other">Other</option>
         </select>
         <button onClick={this.handleSubmit}>finish</button>
+        {this.props.user.error && <p>{this.props.user.error}</p>}
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -63,6 +70,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Join);

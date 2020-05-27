@@ -13,7 +13,6 @@ export const authStart = payload => {
 };
 
 export const authSuccess = payload => {
-  payload.to.push("/join");
   return {
     type: "AUTH_SUCCESS",
     payload
@@ -53,12 +52,18 @@ export const initiateSaveUserData = payload => {
 };
 
 export const commitUserData = payload => {
-  payload.to.push("/chatlist");
   return {
     type: "COMMIT_USER_DATA",
     payload
   };
 };
+
+export const userDataFetchFail = payload =>{
+  return{
+    type:'USER_DATA_FETCH_FAIL',
+    payload
+  }
+}
 
 // export const fetchedUserData = payload =>{
 //   return {

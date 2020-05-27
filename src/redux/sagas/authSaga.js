@@ -5,10 +5,11 @@ import {
   authFail,
   commitLogout,
   initiateLogout,
-  commitUserData
+  commitUserData,
+  userDataFetchFail
 } from "../actions";
 
-export const getUserId = state => state.userId;
+export const getUserId = state => state.auth.userId;
 
 async function fetcher(data) {
   let config = {
@@ -34,7 +35,7 @@ async function fetcher(data) {
 async function fetchUserData(data) {
   try {
     let res = await axios.get(
-      `https://friends-54db6.firebaseio.com/users.json?orderBy="clientId"&startAt=${data}&endAt=${data}`
+      `https://friends-54db6.firebaseio.com/users.json?orderBy="userId"&startAt="${data}"&endAt="${data}"`
     );
     return res;
   } catch (err) {
@@ -43,18 +44,23 @@ async function fetchUserData(data) {
 }
 
 async function saveToFirebase(data) {
-  let id = select(getUserId);
-
   let user = {
-    clientId: id,
+    userId: data.id,
     name: data.name,
     knowMe: data.knowMe
   };
+  let parsedUser = await JSON.stringify(user);
+  console.log(parsedUser);
 
   try {
-    let res = await axios.get(
+    let res = await axios.post(
       `https://friends-54db6.firebaseio.com/users.json`,
-      user
+      parsedUser,
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
     );
     return res;
   } catch (err) {
@@ -63,17 +69,16 @@ async function saveToFirebase(data) {
 }
 
 function* saveUserData(data) {
-  let result = yield call(saveToFirebase, data.payload.formData);
-  yield put(commitUserData(data.payload));
+  let id = yield select(getUserId);
+  let result = yield call(saveToFirebase, { ...data.payload.formData, id });
+  if (!!result.data.error) {
+    yield console.log(result.data.error.message);
+    yield put(userDataFetchFail({ error: result.data.error.message }));
+  } else {
+    yield put(commitUserData(data.payload.formData));
+    yield data.payload.to.push("/chatlist");
+  }
 }
-
-// async function autoLogout(expiresIn){
-
-//   await setTimeout(()=>{
-
-//     yield put(initiateLogout)
-//   },expiresIn*1000)
-// }
 
 function* autoLogout(timeout) {
   yield delay(timeout * 1000);
@@ -101,7 +106,18 @@ function* authenticate(data) {
     yield put(authSuccess(payload));
     if (data.payload.login) {
       let userData = yield call(fetchUserData, result.data.localId);
-      yield put(commitUserData(userData));
+      if (!!userData.data.error) {
+        yield console.log(userData.data.error.message);
+        yield put(userDataFetchFail({ error: userData.data.error.message }));
+      } else {
+        let transformedUserData = yield userData.data[
+          Object.keys(userData.data)[0]
+        ];
+        yield put(commitUserData(transformedUserData));
+        yield data.payload.to.push("/chatlist");
+      }
+    } else {
+      yield data.payload.to.push("/join");
     }
   }
 }

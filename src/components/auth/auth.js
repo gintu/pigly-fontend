@@ -59,6 +59,7 @@ class Auth extends React.Component {
         </button>
 
         {this.props.auth.error && <p>{this.props.auth.error}</p>}
+        {this.props.user.error && <p>{this.props.user.error}</p>}
       </div>
     );
   }
@@ -70,7 +71,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  return { auth: state.auth };
+  return { auth: state.auth, user: state.user };
 };
 
 export default connect(
