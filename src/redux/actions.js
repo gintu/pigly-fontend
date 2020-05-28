@@ -1,4 +1,5 @@
 export const setRoom = payload => {
+  console.log("inside set room");
   return {
     type: "SET_ROOM",
     payload

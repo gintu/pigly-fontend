@@ -8,15 +8,6 @@ const initialState = {
 };
 
 const userReducer = (state = initialState, actions) => {
-  if (actions.type === "COMMIT_USER_DATA") {
-    return {
-      ...actions.payload
-    };
-  } else if (actions.type === "USER_DATA_FETCH_FAIL") {
-  } else {
-    return state;
-  }
-
   switch (actions.type) {
     case "INITIATE_SAVE_USER_DATA": {
       return {
@@ -25,6 +16,7 @@ const userReducer = (state = initialState, actions) => {
       };
     }
     case "SET_ROOM": {
+      console.log("in set room " + actions.payload);
       return {
         ...state,
         room: actions.payload
@@ -35,7 +27,8 @@ const userReducer = (state = initialState, actions) => {
       return {
         ...actions.payload,
         loading: false,
-        error: null
+        error: null,
+        room: ""
       };
     }
     case "USER_DATA_FETCH_FAIL": {

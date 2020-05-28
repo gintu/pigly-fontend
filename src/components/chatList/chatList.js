@@ -4,8 +4,9 @@ import { initiateLogout, setRoom } from "../../redux/actions";
 
 class ChatList extends React.Component {
   handleClick = room => {
+    console.log("in handle click");
+    console.log(room);
     this.props.setRoom(room);
-
     this.props.history.push("/chat");
   };
   render() {
