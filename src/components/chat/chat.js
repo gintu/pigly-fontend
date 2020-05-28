@@ -65,6 +65,6 @@ class Chat extends React.Component {
   }
 }
 const mapStateToProps = state => {
-  return { loginData: state };
+  return { userData: state.user };
 };
 export default connect(mapStateToProps)(Chat);

@@ -2,6 +2,7 @@ const initialState = {
   userId: null,
   name: "",
   knowMe: "",
+  room: "",
   error: null,
   loading: false
 };
@@ -21,6 +22,12 @@ const userReducer = (state = initialState, actions) => {
       return {
         ...state,
         loading: true
+      };
+    }
+    case "SET_ROOM": {
+      return {
+        ...state,
+        room: actions.payload
       };
     }
 

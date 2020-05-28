@@ -1,6 +1,6 @@
-export const setUser = payload => {
+export const setRoom = payload => {
   return {
-    type: "SET_USER",
+    type: "SET_ROOM",
     payload
   };
 };
@@ -58,12 +58,12 @@ export const commitUserData = payload => {
   };
 };
 
-export const userDataFetchFail = payload =>{
-  return{
-    type:'USER_DATA_FETCH_FAIL',
+export const userDataFetchFail = payload => {
+  return {
+    type: "USER_DATA_FETCH_FAIL",
     payload
-  }
-}
+  };
+};
 
 // export const fetchedUserData = payload =>{
 //   return {
