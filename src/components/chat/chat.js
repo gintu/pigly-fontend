@@ -27,7 +27,7 @@ class Chat extends React.Component {
   }
   componentWillUnmount() {
     this.socket.close();
-  }
+  } //make some changes
 
   handleChange = e => this.setState({ text: e.target.value });
   handleSubmit = e => {
